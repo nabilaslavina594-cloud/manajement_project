@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat Admin</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<div
+  x-data="chatAdmin()"
+  class="max-w-2xl mx-auto mt-10 bg-white rounded-xl shadow-lg"
+>
+
+  <!-- Header -->
+  <div class="bg-brand-950 text-white p-4 rounded-t-xl">
+    <h2 class="text-xl font-bold">
+      💬 Bantuan & Keluhan Pasien
+    </h2>
+    <p class="text-sm">
+      Sampaikan pertanyaan atau keluhan kepada admin
+    </p>
+  </div>
+
+  <!-- Chat -->
+  <div class="h-96 overflow-y-auto p-4 space-y-3 bg-gray-50">
+
+    <template x-for="msg in messages">
+      <div
+        :class="msg.sender === 'Pasien'
+        ? 'text-right'
+        : 'text-left'"
+      >
+        <div
+          class="inline-block px-4 py-2 rounded-lg max-w-xs"
+          :class="msg.sender === 'Pasien'
+          ? 'bg-green-500 text-white'
+          : 'bg-gray-200 text-black'"
+        >
+          <strong x-text="msg.sender"></strong><br>
+          <span x-text="msg.text"></span>
+        </div>
+      </div>
+    </template>
+
+  </div>
+
+  <!-- Input -->
+  <div class="border-t p-3 flex gap-2">
+    <input
+      type="text"
+      x-model="newMessage"
+      placeholder="Tuliskan pertanyaan atau keluhan..."
+      class="flex-1 border rounded-lg px-3 py-2"
+    >
+
+    <button
+      @click="sendMessage()"
+      class="bg-green-600 text-white px-4 py-2 rounded-lg"
+    >
+      Kirim
+    </button>
+    <a
+    href="index.html"
+    onclick="return confirm('Apakah Anda yakin ingin mengakhiri percakapan dan kembali ke dashboard?')"
+    class="bg-red-600 text-white px-4 py-2 rounded-lg "
+  >
+    Selesai
+  </a>
+  </div>
+</div>
+
+<script>
+function chatAdmin() {
+  return {
+    newMessage: '',
+    messages: [
+      {
+        sender: 'Admin',
+        text: 'Halo, silakan sampaikan pertanyaan atau keluhan Anda.'
+      }
+    ],
+
+    sendMessage() {
+      if(this.newMessage.trim() !== '') {
+
+        this.messages.push({
+          sender: 'Pasien',
+          text: this.newMessage
+        });
+
+        // simulasi balasan admin
+        setTimeout(() => {
+          this.messages.push({
+            sender: 'Admin',
+            text: 'Pesan Anda telah diterima, admin akan segera membantu.'
+          });
+        }, 1000);
+
+        this.newMessage = '';
+      }
+    }
+  }
+}
+</script>
+
+</body>
+</html>
